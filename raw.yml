@@ -60,6 +60,12 @@
     status_os_shell: "{{ 'present' if result is success and result.stdout | regex_search('bash') else 'absent' }}"
     os_shell: "{{result.stdout | regex_replace('(\\r\\n)','') }}"
 
-
 - set_fact:
     status_yml_identify_os: done
+
+      - "status_os            | {{status_os}}"
+      - "status_os_version    | {{status_os_version}}"
+      - "os_name:             | {{os_name}}"
+      - "os_version:          | {{os_version}}"
+      - "status_os_shell:     | {{status_os_shell}}" 
+      - "os_shell:            | {{os_shell}}" 
