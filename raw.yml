@@ -1,3 +1,65 @@
-- name: "RAW: which python"
-  raw: python --version
-  register: result_status_python
+- set_fact:
+    status_yml_identify_os: true
+
+##
+# Identify OS ID
+- name: "RAW: Verify if <ID> is present under <{{etc_os_release}}>"
+  raw: grep -i '^id=' {{etc_os_release}}
+  register: result
+  ignore_errors: yes
+
+- set_fact:
+    status_os_id: "{{ 'present' if result is success else 'absent' }}"
+
+
+- name: "RAW: Find <ID> and map os_name and status_os"
+  raw: grep -i '^id=' {{etc_os_release}} | tr -d '"' | cut -d "=" -f 2
+  register: result
+  when: status_os_id == "present"
+
+
+- set_fact:
+    status_os: "{{ 'present' if status_os_id == 'present' else 'absent' }}"
+#    os_name: "{{result.stdout_lines|lower}}"
+    os_name: "{{result.stdout|lower | regex_replace('(\\r\\n)','') }}"
+  when: 
+    - status_os_id == "present"
+    - result is not skipped
+
+##
+# Identify OS Version
+- name: "RAW: Verify if <VERSION_ID> is present under <{{etc_os_release}}>"
+  raw: grep -i '^version_id=' {{etc_os_release}}
+  register: result
+  ignore_errors: yes
+
+- set_fact:
+    status_os_version: "{{ 'present' if result is success else 'absent' }}"
+
+
+- name: "RAW: Find <VERSION_ID> and map as os_version and status_os_version"
+  raw: grep -i '^version_id=' {{etc_os_release}} | tr -d '"' | cut -d "=" -f 2
+  register: result
+  when: status_os_version == "present"
+
+- set_fact:
+#    os_version: "{{result.stdout_lines|lower}}"
+    os_version: "{{result.stdout|lower | regex_replace('(\\r\\n)','') }}"
+  when: 
+    - status_os_version == "present"
+    - result is not skipped
+
+
+##
+# Identify default enviroment
+- name: "RAW: Identify default shell"
+  raw: echo $SHELL
+  register: result
+
+- set_fact:
+    status_os_shell: "{{ 'present' if result is success and result.stdout | regex_search('bash') else 'absent' }}"
+    os_shell: "{{result.stdout | regex_replace('(\\r\\n)','') }}"
+
+
+- set_fact:
+    status_yml_identify_os: done
