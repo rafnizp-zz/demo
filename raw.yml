@@ -1,0 +1,3 @@
+- name: "RAW: which python"
+  raw: python --version
+  register: result_status_python
