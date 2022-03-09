@@ -63,6 +63,9 @@
 - set_fact:
     status_yml_identify_os: done
 
+- name: "DEBUG: {{yml_raw_identify_os}}"
+  debug: 
+    msg:
       - "status_os            | {{status_os}}"
       - "status_os_version    | {{status_os_version}}"
       - "os_name:             | {{os_name}}"
