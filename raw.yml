@@ -66,8 +66,6 @@
 - name: "DEBUG: {{yml_raw_identify_os}}"
   debug: 
     msg:
-      - "status_os_version    | {{status_os_version}}"
-      - "os_name:             | {{os_name}}"
-      - "os_version:          | {{os_version}}"
-      - "status_os_shell:     | {{status_os_shell}}" 
-      - "os_shell:            | {{os_shell}}" 
+      - "status_os_id      | {{status_os_id}}"
+      - "status_os         | {{status_os}}"
+      - "os_name           | {{os_name}}"
